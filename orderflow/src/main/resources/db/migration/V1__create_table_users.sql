@@ -1,0 +1,12 @@
+CREATE TABLE users (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(30) NOT NULL,
+    active BOOLEAN NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    PRIMARY KEY(id)
+);
+
+
