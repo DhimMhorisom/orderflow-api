@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.dhimmhorisom.orderflow.exception.UserNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import com.dhimmhorisom.orderflow.enums.Role;
 
 @Service
 public class UserService {
@@ -29,7 +30,7 @@ public class UserService {
         user.setName(dto.name());
         user.setEmail(dto.email());
         user.setPassword(dto.password());
-        user.setRole("USER");
+        user.setRole(Role.CUSTOMER);
         user.setActive(true);
         user.setCreatedAt(LocalDateTime.now());
 
