@@ -5,8 +5,8 @@ import com.dhimmhorisom.orderflow.dto.UserResponseDTO;
 import com.dhimmhorisom.orderflow.entity.User;
 import com.dhimmhorisom.orderflow.exception.EmailAlreadyExistsException;
 import com.dhimmhorisom.orderflow.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.dhimmhorisom.orderflow.exception.UserNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -56,7 +56,7 @@ public class UserService {
     public UserResponseDTO findById(Long id) {
 
         User user = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
 
         return new UserResponseDTO(
                 user.getId(),
@@ -68,7 +68,7 @@ public class UserService {
     public UserResponseDTO update(Long id, UserRequestDTO dto) {
 
         User user = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
 
         // valida email duplicado (se mudou)
         if (!user.getEmail().equals(dto.email()) &&
@@ -90,10 +90,11 @@ public class UserService {
     }
 
     public void delete(Long id){
-        User user = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        if (!repository.existsById(id)) {
+            throw new UserNotFoundException("Usuário não encontrado");
+        }
 
-        repository.delete(user);
+        repository.deleteById(id);
     }
 
 }
