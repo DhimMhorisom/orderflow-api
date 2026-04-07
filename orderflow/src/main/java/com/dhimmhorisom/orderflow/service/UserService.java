@@ -10,6 +10,9 @@ import com.dhimmhorisom.orderflow.exception.UserNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import com.dhimmhorisom.orderflow.enums.Role;
+import com.dhimmhorisom.orderflow.dto.AuthRequestDTO;
+import com.dhimmhorisom.orderflow.dto.AuthResponseDTO;
+import com.dhimmhorisom.orderflow.exception.InvalidCredentialsException;
 
 @Service
 public class UserService {
@@ -96,6 +99,18 @@ public class UserService {
         }
 
         repository.deleteById(id);
+    }
+
+    public AuthResponseDTO login(AuthRequestDTO dto) {
+
+        User user = repository.findByEmail(dto.email())
+                .orElseThrow(() -> new InvalidCredentialsException("Email ou senha inválidos"));
+
+        if (!user.getPassword().equals(dto.password())) {
+            throw new InvalidCredentialsException("Email ou senha inválidos");
+        }
+
+        return new AuthResponseDTO("Login realizado com sucesso");
     }
 
 }
