@@ -1,26 +1,30 @@
 package com.dhimmhorisom.orderflow.service;
 
+import com.dhimmhorisom.orderflow.dto.AuthRequestDTO;
+import com.dhimmhorisom.orderflow.dto.AuthResponseDTO;
 import com.dhimmhorisom.orderflow.dto.UserRequestDTO;
 import com.dhimmhorisom.orderflow.dto.UserResponseDTO;
 import com.dhimmhorisom.orderflow.entity.User;
+import com.dhimmhorisom.orderflow.enums.Role;
 import com.dhimmhorisom.orderflow.exception.EmailAlreadyExistsException;
-import com.dhimmhorisom.orderflow.repository.UserRepository;
-import org.springframework.stereotype.Service;
+import com.dhimmhorisom.orderflow.exception.InvalidCredentialsException;
 import com.dhimmhorisom.orderflow.exception.UserNotFoundException;
+import com.dhimmhorisom.orderflow.repository.UserRepository;
+import com.dhimmhorisom.orderflow.security.JwtService;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
-import com.dhimmhorisom.orderflow.enums.Role;
-import com.dhimmhorisom.orderflow.dto.AuthRequestDTO;
-import com.dhimmhorisom.orderflow.dto.AuthResponseDTO;
-import com.dhimmhorisom.orderflow.exception.InvalidCredentialsException;
 
 @Service
 public class UserService {
 
     private final UserRepository repository;
+    private final JwtService jwtService;
 
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, JwtService jwtService) {
         this.repository = repository;
+        this.jwtService = jwtService;
     }
 
     public UserResponseDTO create(UserRequestDTO dto) {
@@ -74,7 +78,6 @@ public class UserService {
         User user = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
 
-        // valida email duplicado (se mudou)
         if (!user.getEmail().equals(dto.email()) &&
                 repository.findByEmail(dto.email()).isPresent()) {
             throw new EmailAlreadyExistsException("Email já cadastrado.");
@@ -93,7 +96,7 @@ public class UserService {
         );
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         if (!repository.existsById(id)) {
             throw new UserNotFoundException("Usuário não encontrado");
         }
@@ -110,7 +113,8 @@ public class UserService {
             throw new InvalidCredentialsException("Email ou senha inválidos");
         }
 
-        return new AuthResponseDTO("Login realizado com sucesso");
-    }
+        String token = jwtService.generateToken(user.getEmail());
 
+        return new AuthResponseDTO(token);
+    }
 }
