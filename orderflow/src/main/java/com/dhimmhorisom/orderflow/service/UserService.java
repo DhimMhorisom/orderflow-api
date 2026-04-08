@@ -11,6 +11,7 @@ import com.dhimmhorisom.orderflow.exception.InvalidCredentialsException;
 import com.dhimmhorisom.orderflow.exception.UserNotFoundException;
 import com.dhimmhorisom.orderflow.repository.UserRepository;
 import com.dhimmhorisom.orderflow.security.JwtService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,10 +22,12 @@ public class UserService {
 
     private final UserRepository repository;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repository, JwtService jwtService) {
+    public UserService(UserRepository repository, JwtService jwtService, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponseDTO create(UserRequestDTO dto) {
@@ -36,7 +39,7 @@ public class UserService {
         User user = new User();
         user.setName(dto.name());
         user.setEmail(dto.email());
-        user.setPassword(dto.password());
+        user.setPassword(passwordEncoder.encode(dto.password()));
         user.setRole(Role.CUSTOMER);
         user.setActive(true);
         user.setCreatedAt(LocalDateTime.now());
@@ -85,7 +88,7 @@ public class UserService {
 
         user.setName(dto.name());
         user.setEmail(dto.email());
-        user.setPassword(dto.password());
+        user.setPassword(passwordEncoder.encode(dto.password()));
 
         User updated = repository.save(user);
 
@@ -109,7 +112,7 @@ public class UserService {
         User user = repository.findByEmail(dto.email())
                 .orElseThrow(() -> new InvalidCredentialsException("Email ou senha inválidos"));
 
-        if (!user.getPassword().equals(dto.password())) {
+        if (!passwordEncoder.matches(dto.password(), user.getPassword())) {
             throw new InvalidCredentialsException("Email ou senha inválidos");
         }
 
