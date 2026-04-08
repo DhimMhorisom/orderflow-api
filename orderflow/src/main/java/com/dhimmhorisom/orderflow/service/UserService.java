@@ -11,8 +11,8 @@ import com.dhimmhorisom.orderflow.exception.InvalidCredentialsException;
 import com.dhimmhorisom.orderflow.exception.UserNotFoundException;
 import com.dhimmhorisom.orderflow.repository.UserRepository;
 import com.dhimmhorisom.orderflow.security.JwtService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,7 +39,7 @@ public class UserService {
         User user = new User();
         user.setName(dto.name());
         user.setEmail(dto.email());
-        user.setPassword(passwordEncoder.encode(dto.password()));
+        user.setPassword(dto.password());
         user.setRole(Role.CUSTOMER);
         user.setActive(true);
         user.setCreatedAt(LocalDateTime.now());
@@ -88,7 +88,7 @@ public class UserService {
 
         user.setName(dto.name());
         user.setEmail(dto.email());
-        user.setPassword(passwordEncoder.encode(dto.password()));
+        user.setPassword(dto.password());
 
         User updated = repository.save(user);
 
@@ -112,11 +112,14 @@ public class UserService {
         User user = repository.findByEmail(dto.email())
                 .orElseThrow(() -> new InvalidCredentialsException("Email ou senha inválidos"));
 
-        if (!passwordEncoder.matches(dto.password(), user.getPassword())) {
+        if (!user.getPassword().equals(dto.password())) {
             throw new InvalidCredentialsException("Email ou senha inválidos");
         }
 
-        String token = jwtService.generateToken(user.getEmail());
+        String token = jwtService.generateToken(
+                user.getEmail(),
+                user.getRole().name()
+        );
 
         return new AuthResponseDTO(token);
     }
