@@ -45,6 +45,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/categories").authenticated()
                         .requestMatchers(HttpMethod.GET, "/categories/**").authenticated()
 
+                        // Products
+                        .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/products").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/products/**").authenticated()
+
                         // Protegido
                         .anyRequest().authenticated()
                 )
