@@ -52,6 +52,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/products").authenticated()
                         .requestMatchers(HttpMethod.GET, "/products/**").authenticated()
 
+                        // Order
+                        .requestMatchers(HttpMethod.POST, "/orders").authenticated()
+
                         // Protegido
                         .anyRequest().authenticated()
                 )
