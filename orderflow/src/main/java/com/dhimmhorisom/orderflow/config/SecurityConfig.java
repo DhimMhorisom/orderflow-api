@@ -54,6 +54,9 @@ public class SecurityConfig {
 
                         // Order
                         .requestMatchers(HttpMethod.POST, "/orders").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/orders").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/orders/user/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/orders/**").hasRole("ADMIN")
 
                         // Protegido
                         .anyRequest().authenticated()

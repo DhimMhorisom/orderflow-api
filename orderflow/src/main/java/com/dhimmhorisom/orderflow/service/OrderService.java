@@ -108,4 +108,40 @@ public class OrderService {
                 items
         );
     }
+
+    public List<OrderResponseDTO> findAll() {
+        return orderRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public List<OrderResponseDTO> findByUserId(Long userId) {
+        return orderRepository.findByUserId(userId)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional
+    public OrderResponseDTO updateStatus(Long id, String status) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+
+        OrderStatus newStatus = OrderStatus.valueOf(status);
+
+        // se cancelar, devolve estoque
+        if (newStatus == OrderStatus.CANCELED && order.getStatus() != OrderStatus.CANCELED) {
+            for (OrderItem item : order.getItems()) {
+                Product product = item.getProduct();
+                product.setStock(product.getStock() + item.getQuantity());
+            }
+        }
+
+        order.setStatus(newStatus);
+
+        Order updated = orderRepository.save(order);
+
+        return toResponse(updated);
+    }
 }
