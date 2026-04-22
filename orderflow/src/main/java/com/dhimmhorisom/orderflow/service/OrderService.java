@@ -17,6 +17,7 @@ import com.dhimmhorisom.orderflow.repository.ProductRepository;
 import com.dhimmhorisom.orderflow.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.dhimmhorisom.orderflow.exception.OrderNotFoundException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -126,7 +127,7 @@ public class OrderService {
     @Transactional
     public OrderResponseDTO updateStatus(Long id, String status) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+                .orElseThrow(() -> new OrderNotFoundException("Pedido não encontrado"));
 
         OrderStatus newStatus = OrderStatus.valueOf(status);
 
