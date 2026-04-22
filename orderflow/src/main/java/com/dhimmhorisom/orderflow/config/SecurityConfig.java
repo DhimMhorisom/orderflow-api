@@ -33,6 +33,11 @@ public class SecurityConfig {
                         // Rotas Públicas
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
 
                         // Usuários
                         .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
