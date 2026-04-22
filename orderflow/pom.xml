@@ -15,7 +15,7 @@
     <artifactId>orderflow</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>orderflow</name>
-    <description>OrderFlow API</description>
+    <description>OrderFlow API - API REST para gerenciamento de usuários, categorias, produtos e pedidos</description>
 
     <properties>
         <java.version>17</java.version>
