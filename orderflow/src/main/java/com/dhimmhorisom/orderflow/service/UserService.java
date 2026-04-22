@@ -39,7 +39,7 @@ public class UserService {
         User user = new User();
         user.setName(dto.name());
         user.setEmail(dto.email());
-        user.setPassword(dto.password());
+        user.setPassword(passwordEncoder.encode(dto.password()));
         user.setRole(Role.CUSTOMER);
         user.setActive(true);
         user.setCreatedAt(LocalDateTime.now());
@@ -88,7 +88,7 @@ public class UserService {
 
         user.setName(dto.name());
         user.setEmail(dto.email());
-        user.setPassword(dto.password());
+        user.setPassword(passwordEncoder.encode(dto.password()));
 
         User updated = repository.save(user);
 
