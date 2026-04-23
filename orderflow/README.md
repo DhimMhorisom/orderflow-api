@@ -22,6 +22,7 @@ Projeto desenvolvido para fins de portfólio, com foco em boas práticas de dese
 * Flyway (versionamento de banco)
 * Lombok
 * Swagger / OpenAPI
+* JUnit 5 + Mockito
 
 ---
 
@@ -54,7 +55,23 @@ POST /auth/login
 
 ---
 
+##  Exemplo de fluxo
+1. Criar usuário
+2. Realizar login para obter token JWT
+3. Utilizar o token nas requisições protegidas
+4. Criar categorias e produtos (ADMIN)
+5. Criar pedidos com múltiplos itens
+6. Acompanhar e atualizar status dos pedidos
+
 ##  Funcionalidades
+* Cadastro e autenticação de usuários
+* Controle de acesso por perfil (ADMIN / CUSTOMER)
+* CRUD de categorias
+* CRUD de produtos
+* Criação de pedidos com múltiplos itens
+* Controle de estoque automático
+* Cancelamento de pedidos com reversão de estoque
+
 
 ###  Usuários
 
@@ -131,7 +148,7 @@ http://localhost:8081/swagger-ui/index.html
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/orderflow.git
+git clone https://github.com/DhimMhorisom/orderflow-api.git
 ```
 
 ### 2. Configurar banco de dados
@@ -148,21 +165,43 @@ CREATE DATABASE orderflow;
 ./mvnw spring-boot:run
 ```
 
+```bash
+http://localhost:8081/swagger-ui/index.html
+```
+
+---
+
+##  Segurança
+
+* Autenticação via JWT
+* Senhas criptografadas com BCrypt
+* Rotas protegidas por roles (ADMIN / CUSTOMER)
+
 ---
 
 ##  Testes
 
-Os endpoints podem ser testados via:
+Testes unitários implementados com:
 
-* Postman
-* Swagger UI
+- JUnit 5
+- Mockito
+
+Cobertura das principais regras de negócio:
+
+- UserService
+- ProductService
+- OrderService
+
+Os endpoints também podem ser testados via:
+
+- Swagger UI
+- Postman
 
 ---
 
 ##  Melhorias futuras
 
-* Testes automatizados (JUnit + Mockito)
-* Dockerização
+* Dockerização da aplicação
 * Deploy em cloud (Render / Railway / AWS)
 * Paginação de resultados
 * Logs estruturados
@@ -173,4 +212,7 @@ Os endpoints podem ser testados via:
 
 Dhim Mhorisom
 
-Projeto desenvolvido para fins de estudo e portfólio.
+Backend Developer em formação, focado em Java e Spring Boot.
+
+Projeto desenvolvido como aplicação real para portfólio, com foco em boas práticas, segurança e arquitetura backend.
+
