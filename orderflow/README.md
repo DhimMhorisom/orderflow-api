@@ -210,7 +210,7 @@ Os endpoints também podem ser testados via:
 
 ## Autor
 
-Dhim Mhorisom
+Dhim Mhorisom S. R. da Silva
 
 Backend Developer em formação, focado em Java e Spring Boot.
 
