@@ -112,7 +112,7 @@ public class UserService {
         User user = repository.findByEmail(dto.email())
                 .orElseThrow(() -> new InvalidCredentialsException("Email ou senha inválidos"));
 
-        if (!user.getPassword().equals(dto.password())) {
+        if (!passwordEncoder.matches(dto.password(), user.getPassword())) {
             throw new InvalidCredentialsException("Email ou senha inválidos");
         }
 
